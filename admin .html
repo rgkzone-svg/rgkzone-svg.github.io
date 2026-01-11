@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>Admin Panel</h2>
+
+<input id="q" placeholder="Question"><br>
+<input id="o1" placeholder="Option 1">
+<input id="o2" placeholder="Option 2">
+<input id="o3" placeholder="Option 3">
+<input id="o4" placeholder="Option 4"><br>
+<input id="c" placeholder="Correct index (0-3)">
+<input id="t" placeholder="Time (sec)">
+<input id="d" type="date"><br>
+<button onclick="addQ()">Add Question</button>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, addDoc, collection }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged }
+from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+const app=initializeApp({ apiKey:"YOUR_API_KEY", authDomain:"YOUR_PROJECT.firebaseapp.com", projectId:"YOUR_PROJECT_ID" });
+const db=getFirestore(app);
+const auth=getAuth(app);
+
+onAuthStateChanged(auth,u=>{
+  if(!u) location.href="login.html";
+});
+
+window.addQ=async()=>{
+  await addDoc(collection(db,"questions"),{
+    question:q.value,
+    options:[o1.value,o2.value,o3.value,o4.value],
+    correct:Number(c.value),
+    time:Number(t.value),
+    date:d.value
+  });
+  alert("Question Added");
+};
+</script>
+</body>
+</html>
